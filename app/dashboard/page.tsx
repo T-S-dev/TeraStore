@@ -1,25 +1,15 @@
-import React from "react";
+"use client";
+
 import Dropzone from "@/components/Dropzone";
-import { auth } from "@clerk/nextjs";
-import { collection, getDocs } from "firebase/firestore";
-import { db } from "@/firebase";
 import TableWrapper from "@/components/table/TableWrapper";
-import { FileType } from "@/types";
+import useDetails from "@/hooks/useDetails";
 
-const page = async () => {
-  const { userId } = auth();
+const page = () => {
+  const { skeletonFiles, error } = useDetails();
 
-  const docs = await getDocs(collection(db, "users", userId!, "files"));
-
-  const skeletonFiles: FileType[] = docs.docs.map((doc) => ({
-    id: doc.id,
-    fileName: doc.data().fileName,
-    fullName: doc.data().fullName,
-    timestamp: new Date(doc.data().timestamp?.seconds * 1000),
-    downloadURL: doc.data().downloadURL,
-    type: doc.data().type,
-    size: doc.data().size,
-  }));
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
 
   return (
     <div className="flex-1">
