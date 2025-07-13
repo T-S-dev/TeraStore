@@ -8,8 +8,6 @@ import {
   serverTimestamp,
   setDoc,
   collection,
-  query,
-  where,
   getDocs,
 } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
@@ -24,49 +22,41 @@ const Dropzone = () => {
 
   const MAX_FILE_SIZE = 20971520;
 
-  // const match = name.match(
-  //   new RegExp(`^${baseName}(\\(\\d+\\))?\\${ext}$`),
-  // );
+  const checkFileName = async (baseName: string, ext: string, userId: any) => {
+    const escapeRegex = (str: string) =>
+      str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
-  const checkFileName = async (
-    baseName: string,
-    ext: string,
-    db: any,
-    userId: any,
-  ) => {
+    const safeBaseName = escapeRegex(baseName);
+    const safeExt = escapeRegex(ext);
+
     const filesRef = collection(db, "users", userId, "files");
-    const prefixQuery = query(
-      filesRef,
-      where("fileName", ">=", baseName),
-      where("fileName", "<=", baseName + "\uf8ff"),
-    );
-    const snapshot = await getDocs(prefixQuery);
+
+    const snapshot = await getDocs(filesRef);
     const fileNames = snapshot.docs.map((doc) => doc.data().fileName);
 
-    const numbersInUse = fileNames
+    const matchingNames = fileNames.filter((name) =>
+      new RegExp(`^${safeBaseName}(\\(\\d+\\))?${safeExt}$`).test(name),
+    );
+
+    const hasOriginal = matchingNames.includes(`${baseName}${ext}`);
+
+    const numbersInUse = matchingNames
       .map((name) => {
         const match = name.match(
-          new RegExp(`^${baseName}(\\(\\d+\\))?\\${ext}$`),
+          new RegExp(`^${safeBaseName}\\((\\d+)\\)${safeExt}$`),
         );
-        return match ? parseInt(match[1]?.slice(1, -1), 10) : null;
+        return match ? parseInt(match[1], 10) : null;
       })
-      .filter((num) => num !== null)
-      .sort((a, b) => a! - b!);
+      .filter((n): n is number => Number.isInteger(n))
+      .sort((a, b) => a - b);
 
-    let missingNumber = 1;
-    for (let i = 0; i < numbersInUse.length; i++) {
-      if (numbersInUse[i] !== i + 1) {
-        missingNumber = i + 1;
-        break;
-      }
-      if (i === numbersInUse.length - 1) {
-        missingNumber = numbersInUse.length + 1;
-      }
-    }
+    const missingIndex = numbersInUse.findIndex((num, i) => num !== i + 1);
+    const nextNumber =
+      missingIndex !== -1 ? missingIndex + 1 : numbersInUse.length + 1;
 
-    return numbersInUse.length === 0
+    return !hasOriginal
       ? `${baseName}${ext}`
-      : `${baseName}(${missingNumber})${ext}`;
+      : `${baseName}(${nextNumber})${ext}`;
   };
 
   const uploadFile = async (file: File) => {
@@ -82,7 +72,6 @@ const Dropzone = () => {
       const newFileName = await checkFileName(
         fileNameWithoutExt,
         `.${ext}`,
-        db,
         user.id,
       );
       const fileId = `${fileNameWithoutExt}-${uuidv4()}.${ext}`;
