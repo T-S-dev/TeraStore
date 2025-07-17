@@ -6,6 +6,7 @@ import { Toaster } from "sonner";
 import Header from "@/components/Header";
 
 import "./globals.css";
+import FirebaseSyncProvider from "@/components/FirebaseSyncProvider";
 
 export const metadata: Metadata = {
   title: "TeraStore",
@@ -27,22 +28,24 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <Header />
-            <Toaster
-              position="bottom-right"
-              richColors
-              expand={true}
-              visibleToasts={5}
-              toastOptions={{
-                classNames: {
-                  toast: "!border-none",
-                  error: "!bg-red-400 !text-white",
-                  success: "!bg-green-400 !text-white",
-                },
-              }}
-            />
+            <FirebaseSyncProvider>
+              <Header />
+              <Toaster
+                position="bottom-right"
+                richColors
+                expand={true}
+                visibleToasts={5}
+                toastOptions={{
+                  classNames: {
+                    toast: "!border-none",
+                    error: "!bg-red-400 !text-white",
+                    success: "!bg-green-400 !text-white",
+                  },
+                }}
+              />
 
-            {children}
+              {children}
+            </FirebaseSyncProvider>
           </ThemeProvider>
         </body>
       </html>

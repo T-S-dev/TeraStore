@@ -1,7 +1,6 @@
 "use client";
 
 import { FileType } from "@/types";
-import { Button } from "../ui/button";
 import { columns } from "./columns";
 import { DataTable } from "./Table";
 import { useUser } from "@clerk/nextjs";
@@ -11,12 +10,11 @@ import { useCollection } from "react-firebase-hooks/firestore";
 import { db } from "@/firebase";
 import { Skeleton } from "@/components/ui/skeleton";
 
-const TableWrapper = ({ skeletonFiles }: { skeletonFiles: FileType[] }) => {
+const TableWrapper = () => {
   const { user } = useUser();
   const [initialFiles, setInitialFiles] = useState<FileType[]>([]);
-  const [showSkeleton, setShowSkeleton] = useState(true);
 
-  let [docs] = useCollection(
+  const [docs] = useCollection(
     user &&
       query(
         collection(db, "users", user.id, "files"),
@@ -26,7 +24,7 @@ const TableWrapper = ({ skeletonFiles }: { skeletonFiles: FileType[] }) => {
 
   useEffect(() => {
     if (!docs) return;
-    const files: FileType[] = docs?.docs?.map((doc) => ({
+    const files: FileType[] = docs.docs.map((doc) => ({
       id: doc.id,
       fileName: doc.data().fileName,
       fullName: doc.data().fullName,
@@ -38,41 +36,22 @@ const TableWrapper = ({ skeletonFiles }: { skeletonFiles: FileType[] }) => {
     setInitialFiles(files);
   }, [docs]);
 
-  if (!docs && showSkeleton) {
+  if (!docs) {
     return (
-      <div className="flex flex-col">
-        <Button
-          variant={"outline"}
-          className="mb-5 ml-auto h-10 w-36 border border-gray-600"
-        >
-          <Skeleton className="h-5 w-full" />
-        </Button>
-
+      <div className="flex flex-col space-y-4">
+        <div className="flex items-center justify-between">
+          <h2 className="ml-2 text-xl font-bold">Files</h2>
+        </div>
         <div className="rounded-lg border border-gray-600">
-          <div className="">
-            {skeletonFiles.map((file) => (
-              <div
-                key={file.id}
-                className="flex w-full items-center space-x-4 p-5"
-              >
-                <Skeleton className="h-12 w-[6%]" />
-                <Skeleton className="h-12 w-[15%]" />
-                <Skeleton className="h-12 w-[49%]" />
-                <Skeleton className="h-12 w-[15%]" />
-                <Skeleton className="h-12 w-[15%]" />
-              </div>
-            ))}
-
-            {skeletonFiles.length === 0 && (
-              <div className="flex w-full items-center space-x-4 p-5">
-                <Skeleton className="h-12 w-[6%]" />
-                <Skeleton className="h-12 w-[15%]" />
-                <Skeleton className="h-12 w-[49%]" />
-                <Skeleton className="h-12 w-[15%]" />
-                <Skeleton className="h-12 w-[15%]" />
-              </div>
-            )}
-          </div>
+          {[...Array(5)].map((_, i) => (
+            <div key={i} className="flex w-full items-center space-x-4 p-5">
+              <Skeleton className="h-12 w-[6%]" />
+              <Skeleton className="h-12 w-[15%]" />
+              <Skeleton className="h-12 w-[49%]" />
+              <Skeleton className="h-12 w-[15%]" />
+              <Skeleton className="h-12 w-[15%]" />
+            </div>
+          ))}
         </div>
       </div>
     );

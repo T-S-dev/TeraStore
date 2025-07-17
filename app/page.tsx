@@ -28,13 +28,13 @@ export default function Home() {
           </Link>
         ) : (
           <div>
-            <SignInButton afterSignInUrl="/dashboard" mode="modal">
+            <SignInButton afterSignInUrl="/dashboard">
               <Button className="rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-600">
                 Sign In
               </Button>
             </SignInButton>
 
-            <SignUpButton mode="modal">
+            <SignUpButton>
               <Button className="ml-4 rounded bg-gray-300 px-4 py-2 font-bold text-gray-700 hover:bg-gray-400">
                 Register
               </Button>
