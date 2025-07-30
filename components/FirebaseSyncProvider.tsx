@@ -13,10 +13,14 @@ export default function FirebaseSyncProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const { getToken, isSignedIn } = useAuth();
+  const { getToken, isSignedIn, isLoaded } = useAuth();
 
   useEffect(() => {
     const syncFirebase = async () => {
+      if (!isLoaded) {
+        return;
+      }
+
       if (!isSignedIn) {
         await firebaseSignOut(auth);
         return;
@@ -33,7 +37,7 @@ export default function FirebaseSyncProvider({
     };
 
     syncFirebase();
-  }, [isSignedIn, getToken]);
+  }, [isLoaded, isSignedIn, getToken]);
 
   return <>{children}</>;
 }
