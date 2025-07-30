@@ -20,7 +20,7 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-      <html lang="en">
+      <html lang="en" suppressHydrationWarning>
         <body className="flex min-h-screen flex-col">
           <ThemeProvider
             attribute="class"
@@ -37,9 +37,9 @@ export default function RootLayout({
                 visibleToasts={5}
                 toastOptions={{
                   classNames: {
-                    toast: "!border-none",
-                    error: "!bg-red-400 !text-white",
-                    success: "!bg-green-400 !text-white",
+                    toast: "border-none!",
+                    error: "bg-red-400! text-white!",
+                    success: "bg-green-400! text-white!",
                   },
                 }}
               />
