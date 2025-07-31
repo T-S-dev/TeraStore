@@ -7,7 +7,7 @@ import { useUser } from "@clerk/nextjs";
 import { useEffect, useState } from "react";
 import { collection, orderBy, query } from "firebase/firestore";
 import { useCollection } from "react-firebase-hooks/firestore";
-import { db } from "@/firebase";
+import { db } from "@/lib/firebase";
 import { Skeleton } from "@/components/ui/skeleton";
 
 const TableWrapper = () => {

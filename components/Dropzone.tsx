@@ -1,6 +1,6 @@
 "use client";
 
-import { db, storage } from "@/firebase";
+import { db, storage } from "@/lib/firebase";
 import { cn } from "@/lib/utils";
 import { useUser } from "@clerk/nextjs";
 import {
@@ -133,8 +133,8 @@ const Dropzone = () => {
             <div
               {...getRootProps()}
               className={cn(
-                "flex h-60 w-full cursor-pointer items-center justify-center rounded-md border border-dashed border-gray-600 hover:bg-background-hover  dark:border-gray-300",
-                isDragActive && "animate-pulse bg-background-hover",
+                "hover:bg-background-hover flex h-60 w-full cursor-pointer items-center justify-center rounded-md border border-dashed border-gray-600 dark:border-gray-300",
+                isDragActive && "bg-background-hover animate-pulse",
               )}
             >
               <input {...getInputProps()} />
