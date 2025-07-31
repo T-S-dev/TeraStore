@@ -1,8 +1,9 @@
 // "use client";
 
-import { useAppStore } from "@/store/store";
-import { useUser } from "@clerk/nextjs";
 import { useState } from "react";
+import { useUser } from "@clerk/nextjs";
+import { doc, updateDoc } from "firebase/firestore";
+import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -12,9 +13,9 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { doc, updateDoc } from "firebase/firestore";
+
 import { db } from "@/lib/firebase";
-import { toast } from "sonner";
+import { useAppStore } from "@/store/store";
 
 const RenameModal = () => {
   const { user } = useUser();

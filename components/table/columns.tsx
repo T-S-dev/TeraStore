@@ -1,14 +1,14 @@
 "use client";
 
-import { FileType } from "@/types";
-import { ColumnDef } from "@tanstack/react-table";
 import Link from "next/link";
+import { ArrowUpDown, Pen } from "lucide-react";
 import prettyBytes from "pretty-bytes";
-import { FileIcon, defaultStyles } from "react-file-icon";
+import { FileIcon } from "react-file-icon";
+import { ColumnDef } from "@tanstack/react-table";
+
 import { fileTypeColors, fileTextColors } from "@/constants/fileTypeColors";
-import { Pen } from "lucide-react";
 import { useAppStore } from "@/store/store";
-import { ArrowUpDown } from "lucide-react";
+import { FileType } from "@/types";
 
 export const columns: ColumnDef<FileType>[] = [
   {
@@ -81,7 +81,7 @@ export const columns: ColumnDef<FileType>[] = [
           className="flex items-center"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Date Added  
+          Date Added
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </button>
       );

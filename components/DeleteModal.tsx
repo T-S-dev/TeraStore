@@ -1,3 +1,8 @@
+import { useUser } from "@clerk/nextjs";
+import { deleteDoc, doc } from "firebase/firestore";
+import { deleteObject, ref } from "firebase/storage";
+import { toast } from "sonner";
+
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -6,12 +11,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+
 import { db, storage } from "@/lib/firebase";
 import { useAppStore } from "@/store/store";
-import { useUser } from "@clerk/nextjs";
-import { deleteDoc, doc } from "firebase/firestore";
-import { deleteObject, ref } from "firebase/storage";
-import { toast } from "sonner";
 
 const DeleteModal = () => {
   const { user } = useUser();
@@ -52,7 +54,7 @@ const DeleteModal = () => {
         <div className="flex items-center space-x-2">
           <Button
             variant="outline"
-            className="flex-1 py-6 "
+            className="flex-1 py-6"
             onClick={() => setIsDeleteModalOpen(false)}
           >
             Cancel

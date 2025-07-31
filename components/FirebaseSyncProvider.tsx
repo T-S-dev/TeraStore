@@ -1,11 +1,12 @@
 "use client";
 
-import { useAuth } from "@clerk/nextjs";
 import { useEffect } from "react";
+import { useAuth } from "@clerk/nextjs";
 import {
   signInWithCustomToken,
   signOut as firebaseSignOut,
 } from "firebase/auth";
+
 import { auth } from "@/lib/firebase";
 
 export default function FirebaseSyncProvider({

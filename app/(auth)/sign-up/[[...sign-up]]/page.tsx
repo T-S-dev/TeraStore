@@ -1,7 +1,7 @@
 "use client";
 
-import { SignUp, useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
+import { SignUp, useUser } from "@clerk/nextjs";
 
 export default function Page() {
   const router = useRouter();

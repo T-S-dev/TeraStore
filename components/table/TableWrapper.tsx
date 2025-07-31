@@ -1,14 +1,16 @@
 "use client";
 
-import { FileType } from "@/types";
-import { columns } from "./columns";
-import { DataTable } from "./Table";
-import { useUser } from "@clerk/nextjs";
 import { useEffect, useState } from "react";
+import { useUser } from "@clerk/nextjs";
 import { collection, orderBy, query } from "firebase/firestore";
 import { useCollection } from "react-firebase-hooks/firestore";
-import { db } from "@/lib/firebase";
+
 import { Skeleton } from "@/components/ui/skeleton";
+import { columns } from "@/components/table/columns";
+import { DataTable } from "@/components/table/Table";
+
+import { db } from "@/lib/firebase";
+import { FileType } from "@/types";
 
 const TableWrapper = () => {
   const { user } = useUser();

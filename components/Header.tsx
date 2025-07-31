@@ -1,10 +1,10 @@
 "use client";
 
-import { SignedOut, SignedIn, UserButton } from "@clerk/nextjs";
 import Link from "next/link";
-import React from "react";
-import ThemeToggler from "./ThemeToggler";
+import { SignedOut, SignedIn, UserButton } from "@clerk/nextjs";
+
 import { Button } from "@/components/ui/button";
+import ThemeToggler from "@/components/ThemeToggler";
 
 const Header = () => {
   return (

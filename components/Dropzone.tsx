@@ -1,8 +1,9 @@
 "use client";
 
-import { db, storage } from "@/lib/firebase";
-import { cn } from "@/lib/utils";
+import React, { useState } from "react";
+import DZ from "react-dropzone";
 import { useUser } from "@clerk/nextjs";
+
 import {
   doc,
   serverTimestamp,
@@ -11,10 +12,11 @@ import {
   getDocs,
 } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import React, { useState } from "react";
-import DZ from "react-dropzone";
 import { toast } from "sonner";
 import { v4 as uuidv4 } from "uuid";
+
+import { db, storage } from "@/lib/firebase";
+import { cn } from "@/lib/utils";
 
 const Dropzone = () => {
   const [loading, setLoading] = useState(false);

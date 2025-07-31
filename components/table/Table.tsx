@@ -1,4 +1,6 @@
 "use client";
+import { useState } from "react";
+import { TrashIcon } from "lucide-react";
 import {
   ColumnDef,
   flexRender,
@@ -8,6 +10,7 @@ import {
   getSortedRowModel,
 } from "@tanstack/react-table";
 
+import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -16,13 +19,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Button } from "../ui/button";
-import { FileType } from "@/types";
-import { TrashIcon } from "lucide-react";
+import DeleteModal from "@/components/DeleteModal";
+import RenameModal from "@/components/RenameModal";
+
 import { useAppStore } from "@/store/store";
-import DeleteModal from "../DeleteModal";
-import RenameModal from "../RenameModal";
-import { useState } from "react";
+import { FileType } from "@/types";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];

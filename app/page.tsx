@@ -1,12 +1,12 @@
 "use client";
 
 import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 import homeCardContent from "@/constants/homeCardContent";
-import { ArrowRight } from "lucide-react";
 
 export default function Home() {
   return (

@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import { ClerkProvider } from "@clerk/nextjs";
-import { ThemeProvider } from "@/components/ThemeProvider";
 import { Toaster } from "sonner";
 
+import FirebaseSyncProvider from "@/components/FirebaseSyncProvider";
 import Header from "@/components/Header";
+import { ThemeProvider } from "@/components/ThemeProvider";
 
 import "./globals.css";
-import FirebaseSyncProvider from "@/components/FirebaseSyncProvider";
 
 export const metadata: Metadata = {
   title: "TeraStore",
