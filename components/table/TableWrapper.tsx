@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import { useUser } from "@clerk/nextjs";
 import { collection, orderBy, query } from "firebase/firestore";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "@/lib/firebase";
 import { useCollection } from "react-firebase-hooks/firestore";
 
 import { Skeleton } from "@/components/ui/skeleton";
@@ -13,15 +15,17 @@ import { db } from "@/lib/firebase";
 import { FileType } from "@/types";
 
 const TableWrapper = () => {
-  const { user } = useUser();
+  const { user: clerkUser } = useUser();
+  const [firebaseUser] = useAuthState(auth);
   const [initialFiles, setInitialFiles] = useState<FileType[]>([]);
 
   const [docs] = useCollection(
-    user &&
-      query(
-        collection(db, "users", user.id, "files"),
-        orderBy("timestamp", "desc"),
-      ),
+    clerkUser && firebaseUser
+      ? query(
+          collection(db, "users", clerkUser.id, "files"),
+          orderBy("timestamp", "desc"),
+        )
+      : null,
   );
 
   useEffect(() => {
