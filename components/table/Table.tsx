@@ -59,7 +59,7 @@ export function DataTable<TData, TValue>({
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
+            <TableRow key={headerGroup.id} className="hover:bg-none!">
               {headerGroup.headers.map((header) => {
                 return (
                   <TableHead key={header.id}>
@@ -103,7 +103,7 @@ export function DataTable<TData, TValue>({
               </TableRow>
             ))
           ) : (
-            <TableRow>
+            <TableRow className="hover:bg-none!">
               <TableCell colSpan={columns.length} className="h-24 text-center">
                 No Files.
               </TableCell>

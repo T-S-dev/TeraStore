@@ -16,7 +16,7 @@ export const columns: ColumnDef<FileType>[] = [
     header: ({ column }) => {
       return (
         <button
-          className="flex items-center"
+          className="flex cursor-pointer items-center"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Type
@@ -33,7 +33,6 @@ export const columns: ColumnDef<FileType>[] = [
             extension={ext}
             labelColor={fileTypeColors[ext]}
             labelTextColor={fileTextColors[ext]}
-            // {...defaultStyles[ext]}
           />
         </div>
       );
@@ -44,7 +43,7 @@ export const columns: ColumnDef<FileType>[] = [
     header: ({ column }) => {
       return (
         <button
-          className="flex items-center"
+          className="flex cursor-pointer items-center"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Filename
@@ -62,7 +61,7 @@ export const columns: ColumnDef<FileType>[] = [
 
       return (
         <div
-          className="flex w-fit cursor-pointer items-center space-x-2 border-white hover:border-b"
+          className="flex w-fit max-w-xs cursor-pointer items-center space-x-2 border-white hover:border-b"
           onClick={() => {
             openRenameModal(props.row.original.id, props.row.original.fileName);
           }}
@@ -78,7 +77,7 @@ export const columns: ColumnDef<FileType>[] = [
     header: ({ column }) => {
       return (
         <button
-          className="flex items-center"
+          className="flex cursor-pointer items-center"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Date Added
@@ -102,7 +101,7 @@ export const columns: ColumnDef<FileType>[] = [
     header: ({ column }) => {
       return (
         <button
-          className="flex items-center"
+          className="flex cursor-pointer items-center"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Size
