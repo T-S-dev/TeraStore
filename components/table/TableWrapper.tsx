@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { useUser } from "@clerk/nextjs";
 import { collection, orderBy, query } from "firebase/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -12,35 +11,20 @@ import { columns } from "@/components/table/columns";
 import { DataTable } from "@/components/table/Table";
 
 import { db } from "@/lib/firebase";
-import { FileType } from "@/types";
+import { fileConverter } from "@/lib/firebase/converters";
 
 const TableWrapper = () => {
   const { user: clerkUser } = useUser();
   const [firebaseUser] = useAuthState(auth);
-  const [initialFiles, setInitialFiles] = useState<FileType[]>([]);
 
   const [docs] = useCollection(
     clerkUser && firebaseUser
       ? query(
           collection(db, "users", clerkUser.id, "files"),
           orderBy("timestamp", "desc"),
-        )
+        ).withConverter(fileConverter)
       : null,
   );
-
-  useEffect(() => {
-    if (!docs) return;
-    const files: FileType[] = docs.docs.map((doc) => ({
-      id: doc.id,
-      fileName: doc.data().fileName,
-      fullName: doc.data().fullName,
-      timestamp: new Date(doc.data().timestamp?.seconds * 1000),
-      downloadURL: doc.data().downloadURL,
-      type: doc.data().type,
-      size: doc.data().size,
-    }));
-    setInitialFiles(files);
-  }, [docs]);
 
   if (!docs) {
     return (
@@ -63,12 +47,14 @@ const TableWrapper = () => {
     );
   }
 
+  const files = docs.docs.map((doc) => doc.data());
+
   return (
     <div className="flex flex-col space-y-4">
       <div className="flex items-center justify-between">
         <h2 className="ml-2 text-xl font-bold">Files</h2>
       </div>
-      <DataTable columns={columns} data={initialFiles}></DataTable>
+      <DataTable columns={columns} data={files}></DataTable>
     </div>
   );
 };
