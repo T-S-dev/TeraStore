@@ -1,9 +1,7 @@
-// "use client";
+"use client";
 
 import { useState } from "react";
 import { useUser } from "@clerk/nextjs";
-import { doc, updateDoc } from "firebase/firestore";
-import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -14,7 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 
-import { db } from "@/lib/firebase";
+import { renameFile } from "@/services/files";
 import { useAppStore } from "@/store/store";
 
 const RenameModal = () => {
@@ -24,28 +22,19 @@ const RenameModal = () => {
   const { isRenameModalOpen, setIsRenameModalOpen, fileId, fileName } =
     useAppStore();
 
-  const ext = fileName?.split(".").pop();
-  const fileNameWithoutExt = fileName?.split(".").slice(0, -1).join(".");
-
-  const renameFile = async () => {
+  const handleRename = async () => {
     if (!user || !fileId || !newName.trim()) return;
 
-    try {
-      await updateDoc(doc(db, "users", user.id, "files", fileId), {
-        fileName: newName + (ext ? `.${ext}` : ""),
-      });
-      toast.success("File renamed successfully!", {
-        duration: 1500,
-      });
-    } catch (error) {
-      toast.error("Error renaming file!", {
-        duration: 1500,
-      });
-    } finally {
-      setNewName("");
-      setIsRenameModalOpen(false);
-    }
+    const ext = fileName?.split(".").pop();
+    const fullNewName = newName + (ext ? `.${ext}` : "");
+
+    await renameFile(user.id, fileId, fullNewName);
+
+    setNewName("");
+    setIsRenameModalOpen(false);
   };
+
+  const fileNameWithoutExt = fileName?.split(".").slice(0, -1).join(".");
 
   return (
     <Dialog
@@ -65,7 +54,7 @@ const RenameModal = () => {
             onChange={(e) => setNewName(e.target.value)}
             onKeyDownCapture={(e) => {
               if (e.key === "Enter") {
-                renameFile();
+                handleRename();
               }
             }}
           />
@@ -77,7 +66,7 @@ const RenameModal = () => {
             >
               Cancel
             </Button>
-            <Button type="submit" onClick={renameFile}>
+            <Button type="submit" onClick={handleRename}>
               Rename
             </Button>
           </div>
