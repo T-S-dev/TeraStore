@@ -56,6 +56,8 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className="rounded-md border">
+      <DeleteModal />
+      <RenameModal />
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
@@ -82,8 +84,6 @@ export function DataTable<TData, TValue>({
                 key={row.id}
                 data-state={row.getIsSelected() && "selected"}
               >
-                <DeleteModal />
-                <RenameModal />
                 {row.getVisibleCells().map((cell) => (
                   <TableCell key={cell.id}>
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
