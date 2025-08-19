@@ -4,12 +4,7 @@ import { useState } from "react";
 import { useUser } from "@clerk/nextjs";
 
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 
 import { renameFile } from "@/services/files";
@@ -19,8 +14,7 @@ const RenameModal = () => {
   const { user } = useUser();
   const [newName, setNewName] = useState("");
 
-  const { isRenameModalOpen, setIsRenameModalOpen, fileId, fileName } =
-    useAppStore();
+  const { isRenameModalOpen, setIsRenameModalOpen, fileId, fileName } = useAppStore();
 
   const handleRename = async () => {
     if (!user || !fileId || !newName.trim()) return;
@@ -60,10 +54,7 @@ const RenameModal = () => {
           />
 
           <div className="flex justify-end space-x-2 py-3">
-            <Button
-              variant="outline"
-              onClick={() => setIsRenameModalOpen(false)}
-            >
+            <Button variant="outline" onClick={() => setIsRenameModalOpen(false)}>
               Cancel
             </Button>
             <Button type="submit" onClick={handleRename}>

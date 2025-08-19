@@ -19,10 +19,7 @@ const TableWrapper = () => {
 
   const [docs] = useCollection(
     clerkUser && firebaseUser
-      ? query(
-          collection(db, "users", clerkUser.id, "files"),
-          orderBy("timestamp", "desc"),
-        ).withConverter(fileConverter)
+      ? query(collection(db, "users", clerkUser.id, "files"), orderBy("timestamp", "desc")).withConverter(fileConverter)
       : null,
   );
 

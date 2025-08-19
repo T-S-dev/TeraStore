@@ -29,11 +29,7 @@ export const columns: ColumnDef<FileType>[] = [
       const ext = type.split("/")[1];
       return (
         <div className="w-10">
-          <FileIcon
-            extension={ext}
-            labelColor={fileTypeColors[ext]}
-            labelTextColor={fileTextColors[ext]}
-          />
+          <FileIcon extension={ext} labelColor={fileTypeColors[ext]} labelTextColor={fileTextColors[ext]} />
         </div>
       );
     },

@@ -24,12 +24,7 @@ const ThemeToggler = () => {
   }
 
   return (
-    <Button
-      variant="ghost"
-      size="icon"
-      onClick={toggleTheme}
-      className="hover:bg-gray-300 dark:hover:bg-gray-600"
-    >
+    <Button variant="ghost" size="icon" onClick={toggleTheme} className="hover:bg-gray-300 dark:hover:bg-gray-600">
       {theme === "dark" ? (
         <Sun className="h-[1.2rem] w-[1.2rem] text-white transition-all" />
       ) : (

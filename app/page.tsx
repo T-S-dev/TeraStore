@@ -3,13 +3,7 @@ import { SignedIn, SignedOut } from "@clerk/nextjs";
 import { ArrowRight } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 import homeCardContent from "@/constants/homeCardContent";
 
@@ -18,9 +12,7 @@ export default function Home() {
     <main className="flex flex-1 flex-col items-center pt-20 text-center">
       <h1 className="mb-4 text-5xl font-bold md:text-6xl">
         Welcome to{" "}
-        <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
-          TeraStore
-        </span>
+        <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">TeraStore</span>
       </h1>
       <h2 className="mb-8 text-lg text-gray-700 md:text-xl dark:text-gray-400">
         Securely store, access, and manage your files with ease.
