@@ -7,7 +7,7 @@ import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
 
 const ThemeToggler = () => {
-  const [mounted, setMounted] = useState(false); 
+  const [mounted, setMounted] = useState(false);
 
   const { theme, setTheme } = useTheme();
 
@@ -16,11 +16,11 @@ const ThemeToggler = () => {
   };
 
   useEffect(() => {
-    setMounted(true)
-  }, [])
+    setMounted(true);
+  }, []);
 
   if (!mounted) {
-    return null
+    return null;
   }
 
   return (
@@ -41,4 +41,3 @@ const ThemeToggler = () => {
 };
 
 export default ThemeToggler;
-

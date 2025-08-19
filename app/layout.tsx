@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import { ClerkProvider } from "@clerk/nextjs";
 import { Toaster } from "sonner";
 
-import FirebaseSyncProvider from "@/components/FirebaseSyncProvider";
+import ClerkProvider from "@/components/Providers/ClerkProvider";
+import FirebaseSyncProvider from "@/components/Providers/FirebaseSyncProvider";
 import Header from "@/components/Header";
-import { ThemeProvider } from "@/components/ThemeProvider";
+import { ThemeProvider } from "@/components/Providers/ThemeProvider";
 
 import "./globals.css";
 
@@ -19,15 +19,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
-      <html lang="en" suppressHydrationWarning>
-        <body className="flex min-h-screen flex-col">
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
+    <html lang="en" suppressHydrationWarning>
+      <body className="flex min-h-screen flex-col">
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <ClerkProvider>
             <FirebaseSyncProvider>
               <Header />
               <Toaster
@@ -46,9 +46,9 @@ export default function RootLayout({
 
               {children}
             </FirebaseSyncProvider>
-          </ThemeProvider>
-        </body>
-      </html>
-    </ClerkProvider>
+          </ClerkProvider>
+        </ThemeProvider>
+      </body>
+    </html>
   );
 }
