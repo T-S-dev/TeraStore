@@ -93,7 +93,7 @@
 
 @layer base {
   :root {
-    --background: 0 0% 85%;
+    --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
     --background-hover: 216 12.2% 83.9%;
 
