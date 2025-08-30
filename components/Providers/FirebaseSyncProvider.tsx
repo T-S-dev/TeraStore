@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { useAuth } from "@clerk/nextjs";
 import { signInWithCustomToken, signOut as firebaseSignOut } from "firebase/auth";
 
-import { auth } from "@/lib/firebase";
+import { auth } from "@/lib/firebase/client";
 
 export default function FirebaseSyncProvider({ children }: { children: React.ReactNode }) {
   const { getToken, isSignedIn, isLoaded } = useAuth();

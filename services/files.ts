@@ -1,9 +1,9 @@
 import { collection, deleteDoc, doc, getDocs, serverTimestamp, setDoc, updateDoc } from "firebase/firestore";
-import { deleteObject, getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { deleteObject, ref, uploadBytes } from "firebase/storage";
 import { toast } from "sonner";
 import { v4 as uuidv4 } from "uuid";
 
-import { db, storage } from "@/lib/firebase";
+import { db, storage } from "@/lib/firebase/client";
 
 const checkFileName = async (baseName: string, ext: string, userId: any) => {
   const escapeRegex = (str: string) => str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -47,8 +47,11 @@ export async function uploadFile(file: File, user: any) {
     const fileId = `${fileNameWithoutExt}-${uuidv4()}${ext}`;
     const storageRef = ref(storage, `users/${user.id}/files/${fileId}`);
 
-    await uploadBytes(storageRef, file);
-    const downloadURL = await getDownloadURL(storageRef);
+    const metadata = {
+      contentDisposition: `attachment; filename="${newFileName}"`,
+    };
+
+    await uploadBytes(storageRef, file, metadata);
 
     const docRef = doc(db, "users", user.id, "files", fileId);
     await setDoc(docRef, {
@@ -58,7 +61,7 @@ export async function uploadFile(file: File, user: any) {
       timestamp: serverTimestamp(),
       type: file.type,
       size: file.size,
-      downloadURL,
+      fullPath: storageRef.fullPath,
     });
 
     toast.success("File uploaded successfully!", { id: toastId });

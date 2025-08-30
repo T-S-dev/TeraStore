@@ -3,14 +3,14 @@
 import { useUser } from "@clerk/nextjs";
 import { collection, orderBy, query } from "firebase/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "@/lib/firebase";
+import { auth } from "@/lib/firebase/client";
 import { useCollection } from "react-firebase-hooks/firestore";
 
 import { Skeleton } from "@/components/ui/skeleton";
 import { columns } from "@/components/table/columns";
 import { DataTable } from "@/components/table/Table";
 
-import { db } from "@/lib/firebase";
+import { db } from "@/lib/firebase/client";
 import { fileConverter } from "@/lib/firebase/converters";
 
 const TableWrapper = () => {

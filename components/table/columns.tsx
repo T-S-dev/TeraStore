@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { ArrowUpDown, Pen } from "lucide-react";
 import prettyBytes from "pretty-bytes";
 import { FileIcon } from "react-file-icon";
@@ -8,6 +7,10 @@ import { ColumnDef } from "@tanstack/react-table";
 
 import { useAppStore } from "@/store/store";
 import { FileType } from "@/types";
+import { useState } from "react";
+import { toast } from "sonner";
+import { getDownloadURLAction } from "@/actions/getDownloadUrl";
+import { Button } from "../ui/button";
 
 export const fileTypeColors: { [key: string]: string } = {
   pdf: "#FF0000", // Red for PDFs
@@ -141,18 +144,38 @@ export const columns: ColumnDef<FileType>[] = [
     },
   },
   {
-    accessorKey: "downloadURL",
     header: "Link",
-    cell: ({ renderValue, ...props }) => {
+    cell: ({ row }) => {
+      const [loading, setLoading] = useState(false);
+
+      const handleDownload = async () => {
+        setLoading(true);
+
+        const result = await getDownloadURLAction(row.original.id);
+
+        setLoading(false);
+
+        if (result.success) {
+          const link = document.createElement("a");
+          link.href = result.data.url;
+
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        } else {
+          console.error(result.error);
+          toast.error(`Error: ${result.error}`);
+        }
+      };
+
       return (
-        <Link
-          href={(renderValue() as string) || ""}
-          target="_blank"
-          prefetch={false}
-          className="text-blue-500 underline hover:text-blue-600"
+        <button
+          onClick={handleDownload}
+          disabled={loading}
+          className="cursor-pointer text-blue-500 underline hover:text-blue-600 disabled:cursor-not-allowed disabled:text-gray-400 disabled:no-underline"
         >
           Download
-        </Link>
+        </button>
       );
     },
   },
