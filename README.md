@@ -22,7 +22,7 @@ To give you a better feel for the application, here is a short video demonstrati
 
 <div align="center">
 
-![Demo](https://github.com/user-attachments/assets/f786050f-5f16-40e6-ab58-3c29238c232e)
+![Demo](https://github.com/T-S-dev/github-readme-demo-videos/blob/main/TerastoreDemo.webp)
 
 </div>
 
