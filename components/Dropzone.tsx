@@ -1,19 +1,19 @@
 "use client";
 
-import React, { useState } from "react";
-import DZ from "react-dropzone";
+import { useState } from "react";
 import { useUser } from "@clerk/nextjs";
-
+import DZ from "react-dropzone";
 import { toast } from "sonner";
 
-import { uploadFile } from "@/services/files";
 import { cn } from "@/lib/utils";
+import { tryCatch } from "@/lib/tryCatch";
+import { uploadFile } from "@/services/uploadFile";
 
 const Dropzone = () => {
   const [loading, setLoading] = useState(false);
   const { user } = useUser();
 
-  const MAX_FILE_SIZE = 20971520;
+  const MAX_FILE_SIZE = 20 * 1024 * 1024; // 20MB
 
   const onDrop = (acceptedFiles: File[]) => {
     acceptedFiles.forEach(async (file) => {
@@ -23,7 +23,17 @@ const Dropzone = () => {
       if (!user) return;
 
       setLoading(true);
-      await uploadFile(file, user);
+      const toastId = toast.loading(`Uploading ${file.name}...`);
+
+      const [newFileName, error] = await tryCatch(uploadFile(file, user));
+
+      if (error) {
+        console.error("Upload error:", error);
+        toast.error(`Error uploading ${file.name}`, { id: toastId });
+      } else {
+        toast.success(`File "${newFileName}" uploaded successfully!`, { id: toastId });
+      }
+
       setLoading(false);
     });
   };

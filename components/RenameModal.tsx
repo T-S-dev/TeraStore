@@ -2,12 +2,14 @@
 
 import { useState } from "react";
 import { useUser } from "@clerk/nextjs";
+import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 
-import { renameFile } from "@/services/files";
+import { tryCatch } from "@/lib/tryCatch";
+import { renameFile } from "@/services/renameFile";
 import { useAppStore } from "@/store/store";
 
 const RenameModal = () => {
@@ -22,8 +24,17 @@ const RenameModal = () => {
     const ext = fileName?.split(".").pop();
     const fullNewName = newName + (ext ? `.${ext}` : "");
 
-    await renameFile(user.id, fileId, fullNewName);
+    const toastId = toast.loading("Renaming file...");
 
+    const [_, renameError] = await tryCatch(renameFile(user.id, fileId, fullNewName));
+
+    if (renameError) {
+      console.error("Error renaming file:", renameError);
+      toast.error("Error renaming file!", { id: toastId });
+      return;
+    }
+
+    toast.success("File renamed successfully!", { id: toastId });
     setNewName("");
     setIsRenameModalOpen(false);
   };

@@ -1,9 +1,11 @@
 import { useUser } from "@clerk/nextjs";
+import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
-import { deleteFile } from "@/services/files";
+import { tryCatch } from "@/lib/tryCatch";
+import { deleteFile } from "@/services/deleteFile";
 import { useAppStore } from "@/store/store";
 
 const DeleteModal = () => {
@@ -14,8 +16,17 @@ const DeleteModal = () => {
   const handleDelete = async () => {
     if (!user || !fileId) return;
 
-    await deleteFile(user.id, fileId);
+    const toastId = toast.loading("Deleting file...");
 
+    const [, deleteError] = await tryCatch(deleteFile(user.id, fileId));
+
+    if (deleteError) {
+      console.error("Error deleting file:", deleteError);
+      toast.error("Error deleting file!", { id: toastId });
+      return;
+    }
+
+    toast.success("File deleted successfully!", { id: toastId });
     setIsDeleteModalOpen(false);
   };
 
