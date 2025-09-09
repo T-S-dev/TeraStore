@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { SignedIn, SignedOut } from "@clerk/nextjs";
 import { ArrowRight, ShieldCheck, Smartphone, RefreshCw } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -37,12 +36,12 @@ export default function Home() {
         Securely store, access, and manage your files with ease.
       </h2>
 
-      <SignedIn>
-        <DashboardLinkButton text="Go to Dashboard" />
-      </SignedIn>
-      <SignedOut>
-        <DashboardLinkButton text="Get Started" />
-      </SignedOut>
+      <Button className="bg-blue-500 text-white hover:bg-blue-600" asChild>
+        <Link href="/dashboard">
+          Get started
+          <ArrowRight className="ml-2 h-4 w-4" />
+        </Link>
+      </Button>
 
       <div className="mt-16 flex max-w-lg flex-col items-center gap-8 lg:max-w-6xl lg:flex-row">
         {homeCardContent.map((feature, index) => (
@@ -62,12 +61,3 @@ export default function Home() {
     </main>
   );
 }
-
-const DashboardLinkButton = ({ text }: { text: string }) => (
-  <Button className="bg-blue-500 text-white hover:bg-blue-600" asChild>
-    <Link href="/dashboard">
-      {text}
-      <ArrowRight className="ml-2 h-4 w-4" />
-    </Link>
-  </Button>
-);
