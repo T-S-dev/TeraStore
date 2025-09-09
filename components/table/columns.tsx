@@ -3,45 +3,90 @@
 import { ArrowUpDown, Pen } from "lucide-react";
 import prettyBytes from "pretty-bytes";
 import { FileIcon } from "react-file-icon";
-import { ColumnDef } from "@tanstack/react-table";
+import { ColumnDef, CellContext, Row } from "@tanstack/react-table";
 
 import { useAppStore } from "@/store/store";
 import { FileType } from "@/types";
 import { useState } from "react";
 import { toast } from "sonner";
 import { getDownloadURLAction } from "@/actions/getDownloadUrl";
-import { Button } from "../ui/button";
 
 export const fileTypeColors: { [key: string]: string } = {
-  pdf: "#FF0000", // Red for PDFs
-  doc: "#0000FF", // Blue for Docs
-  docx: "#0000FF", // Blue for Docx
-  txt: "#00FF00", // Green for Text files
-  png: "#FFA500", // Orange for PNGs
-  jpg: "#FFFF00", // Yellow for JPGs
-  jpeg: "#FFFF00", // Yellow for JPEGs
-  gif: "#FF00FF", // Magenta for GIFs
-  mp3: "#800080", // Purple for MP3s
-  mp4: "#800080", // Purple for MP4s
-  mov: "#800080", // Purple for MOVs
-  avi: "#800080", // Purple for AVIs
-  csv: "#FFD700", // Gold for CSVs
-  xls: "#008000", // Green for XLS
-  xlsx: "#008000", // Green for XLSX
-  ppt: "#800000", // Maroon for PPT
-  pptx: "#800000", // Maroon for PPTX
-  zip: "#A52A2A", // Brown for ZIPs
-  rar: "#A52A2A", // Brown for RARs
-  tar: "#A52A2A", // Brown for TARs
-  gz: "#A52A2A", // Brown for GZs
+  pdf: "#FF0000",
+  doc: "#0000FF",
+  docx: "#0000FF",
+  plain: "#00FF00", // txt
+  png: "#FFA500",
+  jpg: "#FFFF00",
+  jpeg: "#FFFF00",
+  gif: "#FF00FF",
+  mp3: "#800080",
+  mp4: "#800080",
+  mov: "#800080",
+  avi: "#800080",
+  csv: "#FFD700",
+  xls: "#008000",
+  xlsx: "#008000",
+  ppt: "#800000",
+  pptx: "#800000",
+  zip: "#A52A2A",
+  rar: "#A52A2A",
+  tar: "#A52A2A",
+  gz: "#A52A2A",
 };
 
-export const fileTextColors: { [key: string]: string } = {
-  txt: "#000000", // Black for Text files
-  png: "#000000", // Black for PNGs
-  jpg: "#000000", // Black for JPGs
-  jpeg: "#000000", // Black for JPEGs
-  csv: "#000000", // Black for CSVs
+const FileNameCell = ({ row, getValue }: CellContext<FileType, unknown>) => {
+  const { setFileId, setFileName, setIsRenameModalOpen } = useAppStore();
+
+  const openRenameModal = (id: string, name: string) => {
+    setFileId(id);
+    setFileName(name);
+    setIsRenameModalOpen(true);
+  };
+
+  const fileName = getValue() as string;
+  const { id } = row.original;
+
+  return (
+    <div
+      className="flex w-fit max-w-xs cursor-pointer items-center space-x-2 border-white hover:border-b"
+      onClick={() => openRenameModal(id, fileName)}
+    >
+      <span>{fileName}</span>
+      <Pen width={15} />
+    </div>
+  );
+};
+
+const DownloadCell = ({ row }: { row: Row<FileType> }) => {
+  const [loading, setLoading] = useState(false);
+
+  const handleDownload = async () => {
+    setLoading(true);
+    const result = await getDownloadURLAction(row.original.id);
+    setLoading(false);
+
+    if (result.success) {
+      const link = document.createElement("a");
+      link.href = result.data.url;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } else {
+      console.error(result.error);
+      toast.error(`Error: ${result.error}`);
+    }
+  };
+
+  return (
+    <button
+      onClick={handleDownload}
+      disabled={loading}
+      className="cursor-pointer text-blue-500 underline hover:text-blue-600 disabled:cursor-not-allowed disabled:text-gray-400 disabled:no-underline"
+    >
+      Download
+    </button>
+  );
 };
 
 export const columns: ColumnDef<FileType>[] = [
@@ -63,7 +108,7 @@ export const columns: ColumnDef<FileType>[] = [
       const ext = type.split("/")[1];
       return (
         <div className="w-10">
-          <FileIcon extension={ext} labelColor={fileTypeColors[ext]} labelTextColor={fileTextColors[ext]} />
+          <FileIcon extension={ext} labelColor={fileTypeColors[ext]} labelTextColor="black" />
         </div>
       );
     },
@@ -81,26 +126,7 @@ export const columns: ColumnDef<FileType>[] = [
         </button>
       );
     },
-    cell: ({ renderValue, ...props }) => {
-      const { setFileId, setFileName, setIsRenameModalOpen } = useAppStore();
-      const openRenameModal = (id: string, name: string) => {
-        setFileId(id);
-        setFileName(name);
-        setIsRenameModalOpen(true);
-      };
-
-      return (
-        <div
-          className="flex w-fit max-w-xs cursor-pointer items-center space-x-2 border-white hover:border-b"
-          onClick={() => {
-            openRenameModal(props.row.original.id, props.row.original.fileName);
-          }}
-        >
-          <span>{renderValue() as string}</span>
-          <Pen width={15} />
-        </div>
-      );
-    },
+    cell: FileNameCell,
   },
   {
     accessorKey: "timestamp",
@@ -145,38 +171,6 @@ export const columns: ColumnDef<FileType>[] = [
   },
   {
     header: "Link",
-    cell: ({ row }) => {
-      const [loading, setLoading] = useState(false);
-
-      const handleDownload = async () => {
-        setLoading(true);
-
-        const result = await getDownloadURLAction(row.original.id);
-
-        setLoading(false);
-
-        if (result.success) {
-          const link = document.createElement("a");
-          link.href = result.data.url;
-
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-        } else {
-          console.error(result.error);
-          toast.error(`Error: ${result.error}`);
-        }
-      };
-
-      return (
-        <button
-          onClick={handleDownload}
-          disabled={loading}
-          className="cursor-pointer text-blue-500 underline hover:text-blue-600 disabled:cursor-not-allowed disabled:text-gray-400 disabled:no-underline"
-        >
-          Download
-        </button>
-      );
-    },
+    cell: ({ row }) => <DownloadCell row={row} />,
   },
 ];
