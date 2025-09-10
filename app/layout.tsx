@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Toaster } from "sonner";
 
 import ClerkProvider from "@/components/Providers/ClerkProvider";
-import FirebaseSyncProvider from "@/components/Providers/FirebaseSyncProvider";
+import FirebaseAuthSync from "@/components/FirebaseAuthSync";
 import Header from "@/components/Header";
 import { ThemeProvider } from "@/components/Providers/ThemeProvider";
 
@@ -23,24 +23,23 @@ export default function RootLayout({
       <body className="flex min-h-screen flex-col">
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <ClerkProvider>
-            <FirebaseSyncProvider>
-              <Header />
-              <Toaster
-                position="bottom-right"
-                richColors
-                expand={true}
-                visibleToasts={5}
-                toastOptions={{
-                  classNames: {
-                    toast: "border-none!",
-                    error: "bg-red-400! text-white!",
-                    success: "bg-green-400! text-white!",
-                  },
-                }}
-              />
+            <FirebaseAuthSync />
+            <Header />
+            <Toaster
+              position="bottom-right"
+              richColors
+              expand={true}
+              visibleToasts={5}
+              toastOptions={{
+                classNames: {
+                  toast: "border-none!",
+                  error: "bg-red-400! text-white!",
+                  success: "bg-green-400! text-white!",
+                },
+              }}
+            />
 
-              {children}
-            </FirebaseSyncProvider>
+            {children}
           </ClerkProvider>
         </ThemeProvider>
       </body>
